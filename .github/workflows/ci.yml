@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for trailing whitespace
+        run: |
+          if grep -rn '[[:blank:]]$' README.md LICENSE; then
+            echo "::error::Trailing whitespace found"
+            exit 1
+          fi
+
+      - name: Verify LICENSE exists
+        run: test -f LICENSE
+
+      - name: Verify README exists
+        run: test -f README.md
